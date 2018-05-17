@@ -51,14 +51,14 @@ extern "C" {
      * These constants should be manually define before use this functions.
      */
     
-    // X-code definitions
 #define DDR_SIZE                1024 * 10
-    // End x-code definitions
+//#define DDR_SIZE                32 * 1024 * 1024 // PIC32 DA has 32 MBytes
+
     
 #define EXAMPLE_CONSTANT 0
     
 #define MAX_HEAP_SIZE           DDR_SIZE
-    ///#define HEAP_START_ADDRESS      (0xA8000000)
+    ///#define HEAP_START_ADDRESS      (0xA8000000) // PIC32 DA
     
     
     // On 32-bit machines a 4 byte is typical. 8 is used on 64-bit instead
@@ -139,7 +139,12 @@ extern "C" {
     static size_t getBlockSize(METADATA_T* block);
     static METADATA_T* algorithmFirstFit(METADATA_T* current, size_t length);
     static METADATA_T* algorithmBestFit(METADATA_T* current, size_t length);
-    
+  
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Public Functions
+    // *****************************************************************************
+    // *****************************************************************************
     
     void* myMalloc(size_t length);
     void myFree(void* ptr);

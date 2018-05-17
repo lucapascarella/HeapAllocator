@@ -6,6 +6,13 @@ char heap[MAX_HEAP_SIZE];
 
 MY_ALLOC myAlloc;
 
+/* ************************************************************************** */
+/* ************************************************************************** */
+// Section: Internal Functions                                                */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+
 /**
  @Function
  void myMalloc_Initialization (void)
@@ -112,10 +119,31 @@ static METADATA_T* algorithmBestFit(METADATA_T* current, size_t length) {
 
 /* ************************************************************************** */
 /* ************************************************************************** */
-// Section: Interface Functions                                               */
+// Section: Public Functions                                                  */
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+
+/**
+ @Function
+ void* myMalloc(size_t size)
+ 
+ @Summary
+ Returns a pointer to a new memory allocated block.
+ 
+ @Description
+ This function returns a void pointer to a new memory allocated block of size size.
+ 
+ @Precondition
+ None.
+ 
+ @Parameters
+ @param size Is the minimum size of the allocated block.
+ 
+ @Returns
+ Returns a not NULL pointer if the funciont successes.
+ Returns a NULL pointer if the function fails.
+ */
 void* myMalloc(size_t size) {
     
     size_t length;
@@ -168,6 +196,23 @@ void* myMalloc(size_t size) {
     return rtn;
 }
 
+/**
+ @Function
+ void myFree(void* ptr)
+ 
+ @Summary
+ Release a previous allocated memory.
+ 
+ @Description
+ This function releases a previous allocated piece of dynamic memory.
+ 
+ @Precondition
+ MyMalloc must be called and returns successully.
+ 
+ @Parameters
+ @param ptr Is the pointer to the block to release.
+ 
+ */
 void myFree(void* ptr) {
     
     // Sanity check before continue
@@ -213,7 +258,7 @@ void myFree(void* ptr) {
     myAlloc.requests -= 1;
 }
 
-/*Only for debugging purposes; can be turned off through -NDEBUG flag*/
+/*Only for debugging purposes*/
 void myPrintFreelist(void) {
     long totalRequired =0, totalAssigned=0, totalTotal =0;
     METADATA_T *blocklist_head = myAlloc.blocklist;
