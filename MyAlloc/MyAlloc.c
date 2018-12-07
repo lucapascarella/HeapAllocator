@@ -1,10 +1,40 @@
-#include <stdio.h>
+/** **************************************************************************
+ @Company
+ LP Systems https://lpsystems.eu
+ 
+ @File Name
+ MyAlloc.c
+ 
+ @Author
+ Luca Pascarella https://lucapascarella.com
+ 
+ @Summary
+ Implementation of a custom memory allocator.
+ 
+ @Description
+ This file contains the implementation of a custom memory allocator designed for low-end MCUs.
+ In the header file the user can select between two allocation strategies USE_FISRT_FIT and USE_BEST_FIT.
+ Moreover CACHE_LINE_SIZE enables a padding before the structure allocation to prevent cache memory allignment invalidation.
+ 
+ @License
+ Copyright (C) 2016 LP Systems
+ 
+ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ in compliance with the License. You may obtain a copy of the License at
+ 
+ https://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software distributed under the License
+ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ or implied. See the License for the specific language governing permissions and limitations under
+ the License.
+ ************************************************************************** */
+
 
 #include "MyAlloc.h"
 
-char heap[MAX_HEAP_SIZE];
-
-MY_ALLOC myAlloc;
+static char heap[MAX_HEAP_SIZE];
+static MY_ALLOC myAlloc;
 
 /* ************************************************************************** */
 /* ************************************************************************** */

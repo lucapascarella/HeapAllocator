@@ -1,3 +1,7 @@
+# Xcode project
+.DS_Store
+MyAlloc.xcodeproj/
+
 # Prerequisites
 *.d
 
