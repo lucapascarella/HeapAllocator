@@ -17,12 +17,16 @@ TEST_CASE("Testing MyAlloc 1") {
         INFO("Returned value must not be NULL") // Only appears on a FAIL
         p1 = (char*) myMalloc(123);
         REQUIRE(p1 != NULL);
+        myFree(p1);
     }
     
     SECTION("test bigStr") {
-        INFO("Returned value must not be NULL") // Only appears on a FAIL
+        INFO("Must return the asked size") // Only appears on a FAIL
+        p1 = (char*) myMalloc(123);
+        REQUIRE(p1 != NULL);
         size_t size = MyAlloc_GetRequestedSize(p1);
         REQUIRE(size == 123);
+        myFree(p1);
     }
 }
 

@@ -11,11 +11,9 @@
 
 int main(int argc, const char * argv[]) {
     char *p1;
-    // insert code here...
-    std::cout << "Hello, World!\n";
     
     p1 = (char*) myMalloc(1021);
-    int size = MyAlloc_GetRequestedSize(p1);
+    size_t size = MyAlloc_GetRequestedSize(p1);
     printf("Size: %ld\n\r", size);
     
     return 0;

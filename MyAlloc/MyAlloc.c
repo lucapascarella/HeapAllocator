@@ -292,7 +292,7 @@ void myFree(void* ptr) {
 size_t MyAlloc_GetRequestedSize(void* ptr) {
     // Sanity check before continue
     if (ptr == NULL)
-        return NULL;
+        return 0;
     
     // Find associated METADATA_T block
     METADATA_T* block = ((METADATA_T*) ptr) - 1;
