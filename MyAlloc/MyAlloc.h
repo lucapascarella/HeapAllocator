@@ -64,11 +64,10 @@ extern "C" {
      * These constants should be manually define before use this functions.
      */
     
+//#define MY_ALLOC_PRINT_DEBUG_INFO // Do not use in production phase
 #define DDR_SIZE                1024 * 10
     //#define DDR_SIZE                32 * 1024 * 1024 // PIC32 DA has 32 MBytes
     
-    
-#define EXAMPLE_CONSTANT 0
     
 #define MAX_HEAP_SIZE           DDR_SIZE
     ///#define HEAP_START_ADDRESS      (0xA8000000) // PIC32 DA
@@ -149,8 +148,13 @@ extern "C" {
     // *****************************************************************************
     // *****************************************************************************
     
+    // Basic functions
     void* myMalloc(size_t length);
     void myFree(void* ptr);
+    // Advanced functions
+    size_t MyAlloc_GetRequestedSize(void* ptr);
+    
+    // Debug functions
     void myPrintFreelist(void);
     
     /* Provide C++ Compatibility */

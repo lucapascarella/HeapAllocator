@@ -78,10 +78,11 @@ static void myMalloc_Initialization(void) {
     myAlloc.blocklist->free = true; // The initial memory is all free
     
     // Debug info
+#ifdef MY_ALLOC_PRINT_DEBUG_INFO
     printf("Heap start address: %p 0x%lX\r\n", myAlloc.blocklist, myAlloc.heapStartAddress);
     printf("Heap end address: 0x%lX\r\n", myAlloc.heapEndAddress);
     printf("Heap size: %lu bytes\r\n", myAlloc.heapSize);
-    printf("\r\n");
+#endif
 }
 
 /**
@@ -286,6 +287,17 @@ void myFree(void* ptr) {
             next_block->next->prev = block_to_free;
     }
     myAlloc.requests -= 1;
+}
+
+size_t MyAlloc_GetRequestedSize(void* ptr) {
+    // Sanity check before continue
+    if (ptr == NULL)
+        return NULL;
+    
+    // Find associated METADATA_T block
+    METADATA_T* block = ((METADATA_T*) ptr) - 1;
+    
+    return block->size;
 }
 
 /*Only for debugging purposes*/
