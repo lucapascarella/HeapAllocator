@@ -64,7 +64,8 @@ extern "C" {
      * These constants should be manually define before use this functions.
      */
     
-//#define MY_ALLOC_PRINT_DEBUG_INFO // Do not use in production phase
+#define MY_ALLOC_PRINT_DEBUG_INFO // Do not use in production phase
+    
 #define DDR_SIZE                1024 * 10
     //#define DDR_SIZE                32 * 1024 * 1024 // PIC32 DA has 32 MBytes
     
@@ -73,7 +74,7 @@ extern "C" {
     ///#define HEAP_START_ADDRESS      (0xA8000000) // PIC32 DA
     
     
-    // On 32-bit machines a 4 byte is typical. 8 is used on 64-bit instead
+    // On 32-bit machines 4 bytes are typical. 8 bytes are used on 64-bit, instead
 #define WORD_SIZE               4
     
     // single word (4) or double word (8) alignment
@@ -92,9 +93,8 @@ extern "C" {
     
     
     
-    
-    // A preload of dummy bytes is added into the head of each block of the linked list to prevent cache lines inconstistencies
-    // When the used of the previous block flushs or invalidates the cache content there are not consequence on the current block
+    // The head of every block contains a preload with dummy bytes to prevent cache lines inconstistencies
+    // In this way, a previous block may flush or invalidate the cache content without affecting the current block
     //#define USE_CACHE_LINE_BYTES
 #define CACHE_LINE_SIZE             16  // 16 bytes (4 words) for PIC32MZ DA
     
@@ -155,7 +155,7 @@ extern "C" {
     size_t MyAlloc_GetRequestedSize(void* ptr);
     
     // Debug functions
-    void myPrintFreelist(void);
+    void MyAlloc_PrintFreelist(void);
     
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

@@ -62,7 +62,7 @@ static MY_ALLOC myAlloc;
  
  @Remarks
  To use this functions you must declare the start heap address.
- Use #define HEAP_START_ADDRESS to specify the physical address.
+ Use #define HEAP_START_ADDRESS to specify a physical address.
  */
 static void myMalloc_Initialization(void) {
     // Assign the head of the linked list to the destination heap
@@ -75,13 +75,15 @@ static void myMalloc_Initialization(void) {
     myAlloc.blocklist->next = NULL;
     myAlloc.blocklist->prev = NULL;
     myAlloc.blocklist->size = 0;
-    myAlloc.blocklist->free = true; // The initial memory is all free
+    myAlloc.blocklist->free = true; // Define the initial memory status, all free
     
     // Debug info
 #ifdef MY_ALLOC_PRINT_DEBUG_INFO
     printf("Heap start address: %p 0x%lX\r\n", myAlloc.blocklist, myAlloc.heapStartAddress);
     printf("Heap end address: 0x%lX\r\n", myAlloc.heapEndAddress);
     printf("Heap size: %lu bytes\r\n", myAlloc.heapSize);
+    
+    printf("Heap header size: %lu bytes\r\n", sizeof(METADATA_T));
 #endif
 }
 
@@ -289,6 +291,23 @@ void myFree(void* ptr) {
     myAlloc.requests -= 1;
 }
 
+/**
+ @Function
+ void MyAlloc_GetRequestedSize(void* ptr)
+ 
+ @Summary
+ Return the size of the requested memory.
+ 
+ @Description
+ This function returns the size of the requested memory.
+ 
+ @Precondition
+ MyMalloc must be called and returns successully.
+ 
+ @Parameters
+ A valid pointer to the beginning of the heap section
+ 
+ */
 size_t MyAlloc_GetRequestedSize(void* ptr) {
     // Sanity check before continue
     if (ptr == NULL)
@@ -300,14 +319,31 @@ size_t MyAlloc_GetRequestedSize(void* ptr) {
     return block->size;
 }
 
-/*Only for debugging purposes*/
-void myPrintFreelist(void) {
+/**
+ @Function
+ void MyAlloc_PrintFreelist(void)
+ 
+ @Summary
+ Print a summary of the heap status.
+ 
+ @Description
+ This function is available in debug mode to print a summary of the dynamic memory allocation.
+ 
+ @Precondition
+ MyMalloc must be called and returns successully.
+ 
+ @Parameters
+ None.
+ 
+ */
+#ifdef MY_ALLOC_PRINT_DEBUG_INFO
+void MyAlloc_PrintFreelist(void) {
     long totalRequired =0, totalAssigned=0, totalTotal =0;
     METADATA_T *blocklist_head = myAlloc.blocklist;
     
     int i = 0;
     printf("   |                  Blocks addresses                 |        |                Space                \r\n");
-    printf(" # |   Prev block   |     Current     |   Next block   | State  |  Required  |  Assigned  |   Total   \r\n");
+    printf(" # |   Prev block   |     Current     |   Next block   | Status |  Required  |  Assigned  |   Total   \r\n");
     printf("---+----------------+-----------------+----------------+--------+------------+------------+------------\r\n");
     while (blocklist_head != NULL) {
         size_t space = getBlockSize(blocklist_head);
@@ -331,3 +367,4 @@ void myPrintFreelist(void) {
     //printf("--+----------------+-----------------+----------------+--------+------------+------------+-----------\r\n");
     printf("\r\n");
 }
+#endif

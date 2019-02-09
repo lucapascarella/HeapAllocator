@@ -16,5 +16,7 @@ int main(int argc, const char * argv[]) {
     size_t size = MyAlloc_GetRequestedSize(p1);
     printf("Size: %ld\n\r", size);
     
+    MyAlloc_PrintFreelist();
+    
     return 0;
 }
