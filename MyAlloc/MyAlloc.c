@@ -319,6 +319,7 @@ size_t MyAlloc_GetRequestedSize(void* ptr) {
     return block->size;
 }
 
+#ifdef MY_ALLOC_PRINT_DEBUG_INFO
 /**
  @Function
  void MyAlloc_PrintFreelist(void)
@@ -336,14 +337,13 @@ size_t MyAlloc_GetRequestedSize(void* ptr) {
  None.
  
  */
-#ifdef MY_ALLOC_PRINT_DEBUG_INFO
 void MyAlloc_PrintFreelist(void) {
-    long totalRequired =0, totalAssigned=0, totalTotal =0;
+    long totalRequired = 0, totalAssigned = 0, totalTotal = 0;
     METADATA_T *blocklist_head = myAlloc.blocklist;
     
     int i = 0;
-    printf("   |                  Blocks addresses                 |        |                Space                \r\n");
-    printf(" # |   Prev block   |     Current     |   Next block   | Status |  Required  |  Assigned  |   Total   \r\n");
+    printf("   |                  Blocks addresses                 |        |                Space                 \r\n");
+    printf(" # |   Prev block   |     Current     |   Next block   | Status |  Required  |  Assigned  |   Total    \r\n");
     printf("---+----------------+-----------------+----------------+--------+------------+------------+------------\r\n");
     while (blocklist_head != NULL) {
         size_t space = getBlockSize(blocklist_head);
@@ -366,5 +366,54 @@ void MyAlloc_PrintFreelist(void) {
     printf("   |                |                 |                |        | %10ld | %10lu | %10lu\r\n", totalRequired, totalAssigned, totalTotal);
     //printf("--+----------------+-----------------+----------------+--------+------------+------------+-----------\r\n");
     printf("\r\n");
+}
+
+size_t MyAlloc_GetFreeNonLinearSpace(void) {
+    METADATA_T *blocklist_head = myAlloc.blocklist;
+    size_t totalFree = 0;
+    
+    while (blocklist_head != NULL) {
+        size_t total;
+        if ((char*) (blocklist_head->next) > (char*) (blocklist_head))
+            total = ((char*) (blocklist_head->next) - (char*) (blocklist_head));
+        else
+            total = ((size_t)(myAlloc.blocklist) - (size_t)(blocklist_head)) + myAlloc.heapSize ;
+        if (blocklist_head->free)
+            totalFree += total;
+        blocklist_head = blocklist_head->next;
+    }
+    return totalFree;
+}
+
+
+size_t MyAlloc_GetFullNonLinearSpace(void) {
+    METADATA_T *blocklist_head = myAlloc.blocklist;
+    size_t totalFree = 0;
+    
+    while (blocklist_head != NULL) {
+        size_t total;
+        if ((char*) (blocklist_head->next) > (char*) (blocklist_head))
+            total = ((char*) (blocklist_head->next) - (char*) (blocklist_head));
+        else
+            total = ((size_t)(myAlloc.blocklist) - (size_t)(blocklist_head)) + myAlloc.heapSize ;
+        if (!blocklist_head->free)
+            totalFree += total;
+        blocklist_head = blocklist_head->next;
+    }
+    return totalFree;
+}
+
+size_t MyAlloc_GetAssignedSize(void* ptr) {
+    return ALIGN(MyAlloc_GetRequestedSize(ptr));
+}
+
+size_t MyAlloc_GetTotalSize(void* ptr) {
+    // Sanity check before continue
+    if (ptr == NULL)
+        return 0;
+    
+    // Find associated METADATA_T block
+    METADATA_T* block = ((METADATA_T*) ptr) - 1;
+    return getBlockSize(block) + sizeof(METADATA_T);
 }
 #endif

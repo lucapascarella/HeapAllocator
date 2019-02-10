@@ -66,7 +66,7 @@ extern "C" {
     
 #define MY_ALLOC_PRINT_DEBUG_INFO // Do not use in production phase
     
-#define DDR_SIZE                1024 * 10
+#define DDR_SIZE                1024 * 1
     //#define DDR_SIZE                32 * 1024 * 1024 // PIC32 DA has 32 MBytes
     
     
@@ -156,6 +156,10 @@ extern "C" {
     
     // Debug functions
     void MyAlloc_PrintFreelist(void);
+    size_t MyAlloc_GetFreeNonLinearSpace(void);
+    size_t MyAlloc_GetFullNonLinearSpace(void);
+    size_t MyAlloc_GetAssignedSize(void* ptr);
+    size_t MyAlloc_GetTotalSize(void* ptr);
     
     /* Provide C++ Compatibility */
 #ifdef __cplusplus
